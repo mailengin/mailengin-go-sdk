@@ -18,3 +18,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - Apply canonical `gofmt` formatting to all Go source and test files.
 - Make CI formatting failures report the affected filenames.
+- Retry Go proxy registration while a new public tag propagates.

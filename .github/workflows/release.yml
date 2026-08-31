@@ -25,4 +25,19 @@ jobs:
       - run: go vet ./...
       - run: go test -race ./...
       - name: Register module with Go proxy
-        run: GOPROXY=proxy.golang.org go list -m "github.com/vishveshrathore/mailengin-go-sdk@${GITHUB_REF_NAME}"
+        shell: bash
+        run: |
+          MODULE="github.com/vishveshrathore/mailengin-go-sdk@${GITHUB_REF_NAME}"
+          for ATTEMPT in 1 2 3 4 5 6; do
+            if GOPROXY=https://proxy.golang.org go list -m "${MODULE}"; then
+              exit 0
+            fi
+
+            if [ "${ATTEMPT}" -eq 6 ]; then
+              echo "::error::The Go proxy could not resolve ${MODULE} after ${ATTEMPT} attempts."
+              exit 1
+            fi
+
+            echo "Go proxy has not indexed ${MODULE} yet; retrying in 20 seconds."
+            sleep 20
+          done
