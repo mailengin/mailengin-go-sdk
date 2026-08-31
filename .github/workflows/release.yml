@@ -13,8 +13,16 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: stable
-      - run: test -z "$(gofmt -l .)"
+      - name: Check formatting
+        shell: bash
+        run: |
+          UNFORMATTED="$(gofmt -l .)"
+          if [ -n "${UNFORMATTED}" ]; then
+            echo "::error::The following Go files are not formatted:"
+            printf '%s\n' "${UNFORMATTED}"
+            exit 1
+          fi
       - run: go vet ./...
       - run: go test -race ./...
       - name: Register module with Go proxy
-        run: GOPROXY=proxy.golang.org go list -m "github.com/mailengin/mailengin-go-sdk@${GITHUB_REF_NAME}"
+        run: GOPROXY=proxy.golang.org go list -m "github.com/vishveshrathore/mailengin-go-sdk@${GITHUB_REF_NAME}"

@@ -3,14 +3,14 @@ package mailengin
 type Variables map[string]any
 
 type SendEmailRequest struct {
-	To                string
-	TemplateName      string
-	TemplateID        string
-	Variables         Variables
-	Subject           string
-	FromEmail         string
-	HTML              string
-	ReplyToMailEngin  *bool
+	To               string
+	TemplateName     string
+	TemplateID       string
+	Variables        Variables
+	Subject          string
+	FromEmail        string
+	HTML             string
+	ReplyToMailEngin *bool
 }
 
 type SendEmailResponse struct {

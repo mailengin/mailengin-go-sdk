@@ -16,6 +16,14 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go }}
-      - run: test -z "$(gofmt -l .)"
+      - name: Check formatting
+        shell: bash
+        run: |
+          UNFORMATTED="$(gofmt -l .)"
+          if [ -n "${UNFORMATTED}" ]; then
+            echo "::error::The following Go files are not formatted:"
+            printf '%s\n' "${UNFORMATTED}"
+            exit 1
+          fi
       - run: go vet ./...
       - run: go test -race ./...

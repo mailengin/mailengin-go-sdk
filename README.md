@@ -17,13 +17,13 @@ The official Go SDK for sending transactional email through [MailEngin](https://
 ## Installation
 
 ```bash
-go get github.com/mailengin/mailengin-go-sdk
+go get github.com/vishveshrathore/mailengin-go-sdk
 ```
 
 Import the module using its default package name:
 
 ```go
-import "github.com/mailengin/mailengin-go-sdk"
+import "github.com/vishveshrathore/mailengin-go-sdk"
 ```
 
 ## Before You Send
@@ -52,7 +52,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/mailengin/mailengin-go-sdk"
+	"github.com/vishveshrathore/mailengin-go-sdk"
 )
 
 func main() {
@@ -272,6 +272,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution rules and [PUBLISHING.
 ## License
 
 Released under the [MIT License](./LICENSE). Copyright 2026 MailEngin.
-#   m a i l e n g i n - g o - s d k  
- #   m a i l e n g i n - g o - s d k  
- 
