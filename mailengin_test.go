@@ -16,7 +16,7 @@ func TestSendMapsRequestAndResponse(t *testing.T) {
 		if got := r.Header.Get("Authorization"); got != "Bearer re_test_key" {
 			t.Errorf("authorization = %q", got)
 		}
-		if got := r.Header.Get("User-Agent"); got != "mailengin-go/0.1.0" {
+		if got := r.Header.Get("User-Agent"); got != "mailengin-go/0.2.0" {
 			t.Errorf("user agent = %q", got)
 		}
 		var body map[string]any

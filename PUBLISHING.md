@@ -2,9 +2,9 @@
 
 This guide is for MailEngin maintainers. Developers installing the module should use [README.md](./README.md).
 
-Module: `github.com/vishveshrathore/mailengin-go-sdk`  
-Repository: `vishveshrathore/mailengin-go-sdk`  
-Discovery: [pkg.go.dev](https://pkg.go.dev/github.com/vishveshrathore/mailengin-go-sdk)
+- Module: `github.com/mailengin/mailengin-go-sdk`
+- Repository: `mailengin/mailengin-go-sdk`
+- Discovery: [pkg.go.dev](https://pkg.go.dev/github.com/mailengin/mailengin-go-sdk)
 
 ## How Go Publication Works
 
@@ -12,13 +12,13 @@ Go modules are published through immutable Git tags. There is no registry upload
 
 ## One-Time Repository Setup
 
-1. Use the public repository `https://github.com/vishveshrathore/mailengin-go-sdk`.
+1. Use the public repository `https://github.com/mailengin/mailengin-go-sdk`.
 2. Enable multifactor authentication and protect `main` and release tags.
 3. Create a GitHub environment named `release` with a required maintainer reviewer.
 4. Confirm `go.mod` contains exactly:
 
 ```go
-module github.com/vishveshrathore/mailengin-go-sdk
+module github.com/mailengin/mailengin-go-sdk
 ```
 
 Moving the repository or changing the module path later is a breaking change.
@@ -31,6 +31,18 @@ Update `Version` in `client.go` and add the release notes to `CHANGELOG.md`.
 test -z "$(gofmt -l .)"
 go vet ./...
 go test -race ./...
+go list ./...
+```
+
+On Windows, `go test -race` requires a compatible 64-bit C compiler because the race detector uses CGO. If one is not installed, run the local checks below and let the Ubuntu release workflow perform the race-enabled test:
+
+```powershell
+$unformatted = gofmt -l .
+if ($unformatted) { $unformatted; throw "Go files are not formatted" }
+go vet ./...
+$env:CGO_ENABLED = "0"
+go test ./...
+Remove-Item Env:CGO_ENABLED
 go list ./...
 ```
 
@@ -50,8 +62,8 @@ Before publishing, create a temporary consumer module and point it to the local 
 mkdir mailengin-go-release-check
 cd mailengin-go-release-check
 go mod init example.com/mailengin-release-check
-go mod edit -replace github.com/vishveshrathore/mailengin-go-sdk=../mailengin-go-sdk
-go get github.com/vishveshrathore/mailengin-go-sdk
+go mod edit -replace github.com/mailengin/mailengin-go-sdk=../mailengin-go-sdk
+go get github.com/mailengin/mailengin-go-sdk
 go list -m all
 go test ./...
 ```
@@ -64,10 +76,10 @@ The tag must use the `vMAJOR.MINOR.PATCH` format required by Go modules:
 
 ```bash
 git add client.go CHANGELOG.md
-git commit -m "Release Go SDK v0.1.0"
+git commit -m "Release Go SDK v0.2.0"
 git push origin main
-git tag -a v0.1.0 -m "MailEngin Go SDK v0.1.0"
-git push origin v0.1.0
+git tag -a v0.2.0 -m "MailEngin Go SDK v0.2.0"
+git push origin v0.2.0
 ```
 
 The workflow reruns formatting, vet, and race-enabled tests after `release` approval. It then requests the tagged version from `proxy.golang.org`, which makes the module discoverable to the Go ecosystem.
@@ -79,7 +91,7 @@ Proxy propagation can lag briefly behind a new Git tag. If the final proxy reque
 Request the exact version from the public proxy:
 
 ```bash
-GOPROXY=https://proxy.golang.org go list -m github.com/vishveshrathore/mailengin-go-sdk@v0.1.0
+GOPROXY=https://proxy.golang.org go list -m github.com/mailengin/mailengin-go-sdk@v0.2.0
 ```
 
 Then verify from a clean module without a local `replace` directive:
@@ -88,7 +100,7 @@ Then verify from a clean module without a local `replace` directive:
 mkdir mailengin-go-public-check
 cd mailengin-go-public-check
 go mod init example.com/mailengin-public-check
-GOPROXY=https://proxy.golang.org go get github.com/vishveshrathore/mailengin-go-sdk@v0.1.0
+GOPROXY=https://proxy.golang.org go get github.com/mailengin/mailengin-go-sdk@v0.2.0
 go list -m all
 ```
 
@@ -99,10 +111,10 @@ Confirm the version appears on pkg.go.dev with the README, license, package docu
 Starting with v2, Go requires the major version in both the module and import path:
 
 ```go
-module github.com/vishveshrathore/mailengin-go-sdk/v2
+module github.com/mailengin/mailengin-go-sdk/v2
 ```
 
-Consumers then import `github.com/vishveshrathore/mailengin-go-sdk/v2`. Plan this change before publishing any v2 tag.
+Consumers then import `github.com/mailengin/mailengin-go-sdk/v2`. Plan this change before publishing any v2 tag.
 
 ## Release Recovery
 

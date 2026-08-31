@@ -27,7 +27,7 @@ jobs:
       - name: Register module with Go proxy
         shell: bash
         run: |
-          MODULE="github.com/vishveshrathore/mailengin-go-sdk@${GITHUB_REF_NAME}"
+          MODULE="github.com/mailengin/mailengin-go-sdk@${GITHUB_REF_NAME}"
           for ATTEMPT in 1 2 3 4 5 6; do
             if GOPROXY=https://proxy.golang.org go list -m "${MODULE}"; then
               exit 0
