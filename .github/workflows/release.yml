@@ -1,0 +1,20 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+      - run: test -z "$(gofmt -l .)"
+      - run: go vet ./...
+      - run: go test -race ./...
+      - name: Register module with Go proxy
+        run: GOPROXY=proxy.golang.org go list -m "github.com/mailengin/mailengin-go-sdk@${GITHUB_REF_NAME}"
